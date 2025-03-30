@@ -1,29 +1,32 @@
-name: 'Rust Release'
-description: 'Create a github release from version in Cargo.toml on push to main'
+name: "Rust Release"
+description: "Create a github release from version in Cargo.toml on push to main"
 inputs:
+  title:
+    description: "Release prefix title"
+    required: true
   owner:
-    description: 'Github Repo Owner'
+    description: "Github Repo Owner"
     required: true
   repo:
-    description: 'Github Repo'
+    description: "Github Repo"
     required: true
   token:
-    description: 'Github Token'
+    description: "Github Token"
     required: true
   cargo:
-    description: 'Cargo.toml path'
+    description: "Cargo.toml path"
     required: true
-    default: 'Cargo.toml'
+    default: "Cargo.toml"
   dry_run:
-    description: 'do not actually create release'
+    description: "do not actually create release"
     required: true
     default: "false"
 outputs:
   version:
-    description: 'The Release Tag'
+    description: "The Release Tag"
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"
 branding:
   icon: box
   color: gray-dark
