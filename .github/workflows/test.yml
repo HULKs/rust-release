@@ -3,9 +3,9 @@ name: Test Action
 on:
   push:
     paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-    branches: [ master ]
+      - "docs/**"
+      - "README.md"
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
@@ -18,6 +18,7 @@ jobs:
       - run: echo "version = \"0.1.0\"" > Cargo.toml
       - uses: ./
         with:
+          title: "test"
           owner: ${{ github.repository_owner }}
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
