@@ -22,4 +22,3 @@ jobs:
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: "true"
-          hash: ${{ github.sha }}

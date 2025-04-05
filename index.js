@@ -16,7 +16,6 @@ async function run() {
     const token = core.getInput("token", { required: true });
     const cargo_path = core.getInput("cargo", { required: true });
     const title = core.getInput("title", { required: true });
-    const commitSha = core.getInput("hash", { required: true });
 
     console.log(repo);
 
@@ -30,7 +29,7 @@ async function run() {
     core.info(`Got crate version ${cargo_version}`);
 
     // check current releases for existing version
-    const release_name = `${title} v${cargo_version}`;
+    const release_name = `${title}-v${cargo_version}`;
     const octokit = github.getOctokit(token);
     const releases = await octokit.rest.repos.listReleases({
       owner: owner,
@@ -43,13 +42,7 @@ async function run() {
     } else {
       core.info(`Creating release with tag ${cargo_version}...`);
       if (dry_run === "false") {
-        octokit.rest.git.createRef({
-          owner: owner,
-          repo: repo,
-          ref: `refs/tags/${release_name}`,
-          sha: commitSha,
-        });
-        octokit.rest.repos.createRelease({
+        await octokit.rest.repos.createRelease({
           owner: owner,
           repo: repo,
           tag_name: release_name,
