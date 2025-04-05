@@ -20,4 +20,3 @@ jobs:
           title: "test"
           token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: "true"
-          commit_sha: ${{ github.sha }}

@@ -1,6 +1,5 @@
 const github = require("@actions/github");
 const core = require("@actions/core");
-const glob = require("@actions/glob");
 const { Octokit } = require("@octokit/rest");
 const fs = require("fs");
 
@@ -10,6 +9,7 @@ async function run() {
 
   try {
     // get workflow inputs
+    const title = core.getInput(`title`, { required: true });
     const dry_run = core.getInput(`dry_run`, { required: true });
     const owner = core.getInput(`owner`, { required: true });
     const repo = core.getInput(`repo`, { required: true }).split("/").slice(-1);
@@ -26,10 +26,9 @@ async function run() {
     let cargo_version = cargo_version_result.groups.version;
     core.info(`Got crate version ${cargo_version}`);
 
-    // check current releases for existing version
+    // check current tags for existing version
     const tag_name = `${title}-v${cargo_version}`;
     const octokit = github.getOctokit(token);
-    let release_id = null;
 
     const tags = await octokit.rest.repos.listTags({
       owner: owner,
