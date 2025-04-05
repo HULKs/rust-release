@@ -17,6 +17,9 @@ inputs:
     description: "Cargo.toml path"
     required: true
     default: "Cargo.toml"
+  hash:
+    description: "Commit SHA1"
+    required: true
   dry_run:
     description: "do not actually create release"
     required: true
