@@ -39,10 +39,10 @@ async function run() {
     });
     const existing = releases.data.some((i) => i.name === release_name);
     if (existing) {
-      core.info(`Skipping: Release with tag ${cargo_version} already exists`);
-      core.notice(`Release with tag ${cargo_version} already exists`);
+      core.info(`Skipping: Release with tag ${release_name} already exists`);
+      core.notice(`Release with tag ${release_name} already exists`);
     } else {
-      core.info(`Creating release with tag ${cargo_version}...`);
+      core.info(`Creating release with tag ${release_name}...`);
       if (dry_run === "false") {
         const response = await octokit.rest.repos.createRelease({
           owner: owner,
