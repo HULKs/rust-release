@@ -14,7 +14,6 @@ inputs:
     required: true
   token:
     description: "Github Token"
-    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
   cargo:
     description: "Cargo.toml path"

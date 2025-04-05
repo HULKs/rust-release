@@ -17,8 +17,6 @@ jobs:
       - run: echo "version = \"0.1.0\"" > Cargo.toml
       - uses: ./
         with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: "true"
           commit_sha: ${{ github.sha }}
