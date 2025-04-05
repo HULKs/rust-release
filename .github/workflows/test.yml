@@ -17,6 +17,7 @@ jobs:
       - run: echo "version = \"0.1.0\"" > Cargo.toml
       - uses: ./
         with:
+          title: "test"
           token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: "true"
           commit_sha: ${{ github.sha }}
