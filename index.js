@@ -15,9 +15,7 @@ async function run() {
     const repo = core.getInput(`repo`, { required: true }).split("/").slice(-1);
     const token = core.getInput("token", { required: true });
     const cargo_path = core.getInput("cargo", { required: true });
-    const title = core.getInput("title", { required: true });
-
-    console.log(repo);
+    const commit_sha = core.getInput("commit_sha", { required: true });
 
     core.info("Getting cargo file contents...");
     const cargo_content = fs.readFileSync(cargo_path, "utf8").toString();
@@ -29,41 +27,46 @@ async function run() {
     core.info(`Got crate version ${cargo_version}`);
 
     // check current releases for existing version
-    const release_name = `${title}-v${cargo_version}`;
+    const tag_name = `${title}-v${cargo_version}`;
     const octokit = github.getOctokit(token);
     let release_id = null;
 
-    const releases = await octokit.rest.repos.listReleases({
+    const tags = await octokit.rest.repos.listTags({
       owner: owner,
       repo: repo,
     });
-    const existing = releases.data.some((i) => i.name === release_name);
-    if (existing) {
+    const does_tag_already_exist = tags.data.some((i) => i.name === tag_name);
+
+    if (does_tag_already_exist) {
       core.info(`Skipping: Release with tag ${release_name} already exists`);
       core.notice(`Release with tag ${release_name} already exists`);
     } else {
-      core.info(`Creating release with tag ${release_name}...`);
+      core.info(`Creating tag ${release_name}...`);
       if (dry_run === "false") {
-        const response = await octokit.rest.repos.createRelease({
+        const { data: tagData } = await octokit.rest.git.createTag({
           owner: owner,
           repo: repo,
-          tag_name: release_name,
-          name: release_name,
+          tag: tag_name,
+          message: tag_name,
+          object: commit_sha,
+          type: "commit",
         });
-        release_id = response.data.id;
+
+        const { data: refData } = await octokit.rest.git.createRef({
+          owner: owner, // Replace with your GitHub username
+          repo: repo, // Replace with your GitHub repository name
+          ref: `refs/tags/${tag_name}`, // The tag ref to create
+          sha: commit_sha, // The commit SHA that the tag points to
+        });
       } else {
-        core.info(
-          `Would create release with tag ${release_name}, but this is a dry run.`,
-        );
+        core.info(`Would create tag ${tag_name}, but this is a dry run.`);
       }
-      core.notice(`Created release with tag ${release_name}`);
+      core.notice(`Created tag ${tag_name}`);
     }
 
     // output the crate version
     core.setOutput("version", cargo_version);
-    core.setOutput("release_name", release_name);
-    core.setOutput("created_new_release", !existing);
-    core.setOutput("release_id", release_id);
+    core.setOutput("tag_name", tag_name);
   } catch (error) {
     core.setFailed(error.message);
   }
