@@ -37,10 +37,10 @@ async function run() {
     const does_tag_already_exist = tags.data.some((i) => i.name === tag_name);
 
     if (does_tag_already_exist) {
-      core.info(`Skipping: Release with tag ${release_name} already exists`);
-      core.notice(`Release with tag ${release_name} already exists`);
+      core.info(`Skipping: Tag ${tag_name} already exists`);
+      core.notice(`Tag ${tag_name} already exists`);
     } else {
-      core.info(`Creating tag ${release_name}...`);
+      core.info(`Creating tag ${tag_name}...`);
       if (dry_run === "false") {
         const { data: tagData } = await octokit.rest.git.createTag({
           owner: owner,
