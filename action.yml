@@ -1,7 +1,7 @@
 name: "Rust Release"
 description: "Create a github release from version in Cargo.toml on push to main"
 inputs:
-  title:
+  tag_prefix:
     description: "Tag prefix"
     required: true
   owner:
@@ -19,10 +19,6 @@ inputs:
     description: "Cargo.toml path"
     required: true
     default: "Cargo.toml"
-  dry_run:
-    description: "do not actually create release"
-    required: true
-    default: "false"
   commit_sha:
     description: "SHA1 of the commit to tag"
     default: ${{ github.sha }}
@@ -32,6 +28,8 @@ outputs:
     description: "The version in the Cargo.toml"
   is_new_version:
     description: "If the version is new"
+  tag_name:
+    description: "Name of the tag"
 runs:
   using: "node16"
   main: "dist/index.js"

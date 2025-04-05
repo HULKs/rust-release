@@ -17,6 +17,5 @@ jobs:
       - run: echo "version = \"0.1.0\"" > Cargo.toml
       - uses: ./
         with:
-          title: "test"
+          tag_prefix: "test"
           token: ${{ secrets.GITHUB_TOKEN }}
-          dry_run: "true"
