@@ -31,6 +31,8 @@ async function run() {
     // check current releases for existing version
     const release_name = `${title}-v${cargo_version}`;
     const octokit = github.getOctokit(token);
+    let release_id = null;
+
     const releases = await octokit.rest.repos.listReleases({
       owner: owner,
       repo: repo,
@@ -42,22 +44,26 @@ async function run() {
     } else {
       core.info(`Creating release with tag ${cargo_version}...`);
       if (dry_run === "false") {
-        await octokit.rest.repos.createRelease({
+        const response = await octokit.rest.repos.createRelease({
           owner: owner,
           repo: repo,
           tag_name: release_name,
           name: release_name,
         });
+        release_id = response.data.id;
       } else {
         core.info(
-          `Would create release with tag ${cargo_version}, but this is a dry run.`,
+          `Would create release with tag ${release_name}, but this is a dry run.`,
         );
       }
-      core.notice(`Created release with tag ${cargo_version}`);
+      core.notice(`Created release with tag ${release_name}`);
     }
 
     // output the crate version
     core.setOutput("version", cargo_version);
+    core.setOutput("release_name", release_name);
+    core.setOutput("created_new_release", !existing);
+    core.setOutput("release_id", release_id);
   } catch (error) {
     core.setFailed(error.message);
   }

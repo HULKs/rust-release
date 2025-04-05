@@ -23,7 +23,13 @@ inputs:
     default: "false"
 outputs:
   version:
-    description: "The Release Tag"
+    description: "The version in the Cargo.toml"
+  created_new_release:
+    description: "Did the action create a new release?"
+  release_name:
+    description: "The name of the generated release"
+  release_id:
+    description: "The generated release id if a release was created, otherwise null"
 runs:
   using: "node16"
   main: "dist/index.js"
