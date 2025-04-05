@@ -1,14 +1,20 @@
 name: "Rust Release"
 description: "Create a github release from version in Cargo.toml on push to main"
 inputs:
+  title:
+    description: "Tag prefix"
+    required: true
   owner:
     description: "Github Repo Owner"
+    default: ${{ github.repository_owner }}
     required: true
   repo:
     description: "Github Repo"
+    default: ${{ github.repository }}
     required: true
   token:
     description: "Github Token"
+    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
   cargo:
     description: "Cargo.toml path"
@@ -20,6 +26,7 @@ inputs:
     default: "false"
   commit_sha:
     description: "SHA1 of the commit to tag"
+    default: ${{ github.sha }}
     required: true
 outputs:
   version:
