@@ -36065,36 +36065,36 @@ async function run() {
     });
     const does_tag_already_exist = tags.data.some((i) => i.name === tag_name);
 
-    if (does_tag_already_exist) {
-      core.info(`Skipping: Tag ${tag_name} already exists`);
-      core.notice(`Tag ${tag_name} already exists`);
-    } else {
-      core.info(`Creating tag ${tag_name}...`);
-      if (dry_run === "false") {
-        const { data: tagData } = await octokit.rest.git.createTag({
-          owner: owner,
-          repo: repo,
-          tag: tag_name,
-          message: tag_name,
-          object: commit_sha,
-          type: "commit",
-        });
+    // if (does_tag_already_exist) {
+    //   core.info(`Skipping: Tag ${tag_name} already exists`);
+    //   core.notice(`Tag ${tag_name} already exists`);
+    // } else {
+    //   core.info(`Creating tag ${tag_name}...`);
+    //   if (dry_run === "false") {
+    //     const { data: tagData } = await octokit.rest.git.createTag({
+    //       owner: owner,
+    //       repo: repo,
+    //       tag: tag_name,
+    //       message: tag_name,
+    //       object: commit_sha,
+    //       type: "commit",
+    //     });
 
-        const { data: refData } = await octokit.rest.git.createRef({
-          owner: owner, // Replace with your GitHub username
-          repo: repo, // Replace with your GitHub repository name
-          ref: `refs/tags/${tag_name}`, // The tag ref to create
-          sha: commit_sha, // The commit SHA that the tag points to
-        });
-      } else {
-        core.info(`Would create tag ${tag_name}, but this is a dry run.`);
-      }
-      core.notice(`Created tag ${tag_name}`);
-    }
+    //     const { data: refData } = await octokit.rest.git.createRef({
+    //       owner: owner, // Replace with your GitHub username
+    //       repo: repo, // Replace with your GitHub repository name
+    //       ref: `refs/tags/${tag_name}`, // The tag ref to create
+    //       sha: commit_sha, // The commit SHA that the tag points to
+    //     });
+    //   } else {
+    //     core.info(`Would create tag ${tag_name}, but this is a dry run.`);
+    //   }
+    //   core.notice(`Created tag ${tag_name}`);
+    // }
 
     // output the crate version
     core.setOutput("version", cargo_version);
-    core.setOutput("tag_name", tag_name);
+    core.setOutput("is_new_version", !does_tag_already_exist);
   } catch (error) {
     core.setFailed(error.message);
   }
